@@ -1,0 +1,7 @@
+apiVersion: v2
+name: helm-dogoncall
+description: dogoncall helm chart
+type: application
+# versions are overrided in CI
+version: 0.1.0
+appVersion: 0.1.0

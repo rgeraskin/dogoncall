@@ -1,0 +1,4 @@
+image:
+  repository: rgeraskin/dogoncall
+  # tag: latest
+schedule: "*/1 * * * *"

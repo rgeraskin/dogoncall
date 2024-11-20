@@ -1,0 +1,17 @@
+[tools]
+tilt = "0.33.21"
+pre-commit = "3.8.0"
+
+[tasks.build]
+run = "docker buildx build . -t rgeraskin/dogoncall:debug --push"
+
+[tasks.deploy]
+run = """
+helm template \
+    -n dogoncall \
+    --set namespace=dogoncall \
+    --set image.tag=debug \
+    -f helm/values-private.yaml \
+    dogoncall helm | \
+kubectl apply -f -
+"""
