@@ -31,14 +31,15 @@ func get_on_call_schedule(
 	// make the request
 	body, err := http_req("schedules", "GET", endpoint_schedules, headers, nil)
 	if err != nil {
-		return "", err
+		slog.Error(err.Error())
+		return "", fmt.Errorf("error getting schedules http request")
 	}
 
 	// body is json so we need to parse it to get the schedule id
 	var schedules SchedulesBody
 	err = json.Unmarshal(body, &schedules)
 	if err != nil {
-		return "", fmt.Errorf("Error unmarshalling schedules response body: %v", err)
+		return "", fmt.Errorf("error unmarshalling schedules response body: %v", err)
 	}
 
 	// loop through the schedules to find the schedule id from the schedule name
@@ -65,14 +66,15 @@ func get_on_call_engineer(
 	// make the request
 	body, err := http_req("engineer", "GET", endpoint_schedules+schedule_id+"/on-call", headers, nil)
 	if err != nil {
-		return "", err
+		slog.Error(err.Error())
+		return "", fmt.Errorf("error getting on-call engineer http request")
 	}
 
 	// body is json so we need to parse it to get the on-call engineer
 	var on_call OnCallBody
 	err = json.Unmarshal(body, &on_call)
 	if err != nil {
-		return "", fmt.Errorf("Error unmarshalling engineer response body: %v", err)
+		return "", fmt.Errorf("error unmarshalling engineer response body: %v", err)
 	}
 
 	// get the on-call engineer id
@@ -108,13 +110,14 @@ func send_slack_message(
 		"schedule_link":  datadog_schedules_link + schedule_id,
 	})
 	if err != nil {
-		return "", fmt.Errorf("Error marshalling slack message: %v", err)
+		return "", fmt.Errorf("error marshalling slack message: %v", err)
 	}
 
 	// make the request
 	body, err := http_req("slack", "POST", endpoint_slack, headers, messageBody)
 	if err != nil {
-		return "", err
+		slog.Error(err.Error())
+		return "", fmt.Errorf("error sending slack message with http request")
 	}
 
 	slog.Info("slack message sent:", "response", string(body))
@@ -131,7 +134,7 @@ func http_req(
 	// create http request to the datadog to get the on-call schedule engineer
 	req, err := http.NewRequest(method, endpoint, bytes.NewBuffer(payload))
 	if err != nil {
-		return nil, fmt.Errorf("Error creating %s request: %v", kind, err)
+		return nil, fmt.Errorf("error creating %s request: %v", kind, err)
 	}
 	// set headers
 	for key, value := range headers {
@@ -142,14 +145,14 @@ func http_req(
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Error making %s request: %v", kind, err)
+		return nil, fmt.Errorf("error making %s request: %v", kind, err)
 	}
 	defer resp.Body.Close()
 
 	// read the body into a byte slice before unmarshalling it
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("Error reading %s response body: %v", kind, err)
+		return nil, fmt.Errorf("error reading %s response body: %v", kind, err)
 	}
 
 	// check if the response code is 200
