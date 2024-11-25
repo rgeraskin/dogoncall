@@ -1,4 +1,4 @@
-module github.com/rgeraskin/dogoncall/dogoncall
+module github.com/rgeraskin/dogoncall
 
 go 1.23.2
 
