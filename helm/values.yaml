@@ -17,9 +17,11 @@ hull:
             inline: _HT*hull.config.specific.secret.scheduleName
     cronjob:
       dogoncall:
-        schedule: "*/1 * * * *"
+        schedule: 0 6 * * 1
+        concurrencyPolicy: Forbid
         job:
           pod:
+            restartPolicy: OnFailure
             containers:
               dogoncall:
                 image:
