@@ -2,9 +2,9 @@ apiVersion: v2
 name: helm-dogoncall
 description: dogoncall helm chart
 type: application
-appVersion: 0.1.0
+appVersion: 0.1.1
 # version will be overrided in CI
-version: 1.0.0
+version: 1.0.1
 dependencies:
   - name: hull
     version: "1.25"

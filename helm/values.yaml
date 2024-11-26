@@ -24,7 +24,7 @@ hull:
               dogoncall:
                 image:
                   repository: rgeraskin/dogoncall
-                  tag: latest
+                  tag: _HT!{{ (index . "$").Chart.AppVersion }}
                 imagePullPolicy: Always
                 envFrom:
                   dogoncall:
