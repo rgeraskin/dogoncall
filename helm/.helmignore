@@ -1,2 +1,2 @@
 values-private.yaml
-*.tgz
+./*.tgz

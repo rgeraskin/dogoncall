@@ -1,4 +1,38 @@
-image:
-  repository: rgeraskin/dogoncall
-  # tag: latest
-schedule: "*/1 * * * *"
+hull:
+  config:
+    general:
+      noObjectNamePrefixes: true
+      rbac: false
+  objects:
+    secret:
+      dogoncall:
+        data:
+          ENDPOINT_SLACK:
+            inline: _HT*hull.config.specific.secret.endpointSlack
+          DD_APP_KEY:
+            inline: _HT*hull.config.specific.secret.ddAppKey
+          DD_API_KEY:
+            inline: _HT*hull.config.specific.secret.ddApiKey
+          SCHEDULE_NAME:
+            inline: _HT*hull.config.specific.secret.scheduleName
+    cronjob:
+      dogoncall:
+        schedule: "*/1 * * * *"
+        job:
+          pod:
+            containers:
+              dogoncall:
+                image:
+                  repository: rgeraskin/dogoncall
+                  tag: latest
+                imagePullPolicy: Always
+                envFrom:
+                  dogoncall:
+                    secretRef:
+                      name: dogoncall
+    namespace:
+      dogoncall:
+        enabled: false
+    serviceaccount:
+      default:
+        enabled: false

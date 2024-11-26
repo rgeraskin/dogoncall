@@ -16,5 +16,7 @@ jobs:
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | helm registry login registry-1.docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           tag=$(echo ${{ github.ref_name }} | sed 's/helm-//')
+          helm repo add hull https://vidispine.github.io/hull
+          helm dependency build helm
           helm package --version "$tag" helm
           helm push "helm-dogoncall-$tag.tgz" oci://registry-1.docker.io/${{ secrets.DOCKERHUB_USERNAME }}
