@@ -30,7 +30,3 @@ repos:
     hooks:
       - id: markdownlint
         args: [--fix, --disable, MD013, --]
-  - repo: https://github.com/hadolint/hadolint
-    rev: v2.13.1-beta
-    hooks:
-      - id: hadolint
